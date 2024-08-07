@@ -1,0 +1,42 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '16'
+
+    - name: Install dependencies
+      run: npm install
+
+    - name: Run frontend tests
+      run: npm run test:frontend
+
+    - name: Run backend tests
+      run: npm run test:backend
+
+    - name: Generate frontend report
+      run: npm run report:frontend
+
+    - name: Generate backend report
+      run: npm run report:backend
+
+    - name: Upload Test Results
+      uses: actions/upload-artifact@v2
+      with:
+        name: allure-report
+        path: ./allure-report
